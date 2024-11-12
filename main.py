@@ -4,7 +4,7 @@ class BadmintonSet(flet.Container):
 
     def player1_increase_score(self, e):
         # ändra variabelvärdet
-        if self.player1_score < 21:
+        if self.player1_score < self.max_score or (self.player1_score - self.player2_score < 2 and self.player1_score < 30):
             self.player1_score += 1
 
         # ändra texten så den stämmer med variabeln
@@ -28,7 +28,7 @@ class BadmintonSet(flet.Container):
         pass
     def player2_increase_score(self, e):
         # ändra variabelvärdet
-        if self.player2_score < 21:
+        if self.player2_score < self.max_score or (self.player2_score - self.player1_score < 2 and self.player2_score < 30):
             self.player2_score += 1
 
         # ändra texten så den stämmer med variabeln
@@ -51,7 +51,7 @@ class BadmintonSet(flet.Container):
         self.player2_score_text.update()
         pass
 
-    def __init__(self):
+    def __init__(self, player1_name, player2_name, max_score):
         super().__init__()
 
         self.bgcolor = "#ffdddd"
@@ -61,6 +61,10 @@ class BadmintonSet(flet.Container):
             colors=["#ff0000", "#ffff00", "#00ffff"]
         )
 
+        self.max_score = max_score
+
+        self.player1_name = player1_name
+        self.player2_name = player2_name
         self.player1_score = 0
         self.player2_score = 0
 
@@ -70,110 +74,32 @@ class BadmintonSet(flet.Container):
         self.content = flet.Row(
             alignment=flet.MainAxisAlignment.CENTER,
             controls=[
-                flet.Text("Bertil", size=20),
-                flet.IconButton(icon=flet.icons.REMOVE, on_click=player1_decrease_score),
-                flet.IconButton(icon=flet.icons.ADD, on_click=player1_increase_score),
+                flet.Text(self.player1_name, size=20),
+                flet.IconButton(icon=flet.icons.REMOVE, on_click=self.player1_decrease_score),
+                flet.IconButton(icon=flet.icons.ADD, on_click=self.player1_increase_score),
                 self.player1_score_text,
                 flet.Text("-", size=30),
                 self.player2_score_text,
-                flet.IconButton(icon=flet.icons.REMOVE, on_click=player2_decrease_score),
-                flet.IconButton(icon=flet.icons.ADD, on_click=player2_increase_score),
-                flet.Text("Wlem", size=20)
+                flet.IconButton(icon=flet.icons.REMOVE, on_click=self.player2_decrease_score),
+                flet.IconButton(icon=flet.icons.ADD, on_click=self.player2_increase_score),
+                flet.Text(self.player2_name, size=20)
             ]
         )
 
 
 
 def main(page: flet.Page):
-    player1_score = 0
-    player2_score = 0
+    player1 = "Bertil"
+    player2 = "Augustus"
 
-    player1_score_text = flet.Text(str(player1_score), size=30)
-    player2_score_text = flet.Text(str(player2_score), size=30)
-
-    def player1_increase_score(e):
-        nonlocal player1_score
-        nonlocal player1_score_text
-
-        # ändra variabelvärdet
-        if player1_score < 21:
-            player1_score += 1
-
-        # ändra texten så den stämmer med variabeln
-        player1_score_text.value = str(player1_score)
-
-        # säg till Flet att en uppdatering har
-        # skett så att den visas
-        player1_score_text.update()
-        pass
-    def player1_decrease_score(e):
-        nonlocal player1_score
-        nonlocal player1_score_text
-
-        # ändra variabelvärdet
-        if player1_score > 0:
-            player1_score -= 1
-
-        # ändra texten så den stämmer med variabeln
-        player1_score_text.value = str(player1_score)
-
-        # säg till Flet att en uppdatering har
-        # skett så att den visas
-        player1_score_text.update()
-        pass
-    def player2_increase_score(e):
-        nonlocal player2_score
-        nonlocal player2_score_text
-
-        # ändra variabelvärdet
-        if player2_score < 21:
-            player2_score += 1
-
-        # ändra texten så den stämmer med variabeln
-        player2_score_text.value = str(player2_score)
-
-        # säg till Flet att en uppdatering har
-        # skett så att den visas
-        player2_score_text.update()
-        pass
-    def player2_decrease_score(e):
-        nonlocal player2_score
-        nonlocal player2_score_text
-
-        # ändra variabelvärdet
-        if player2_score > 0:
-            player2_score -= 1
-
-        # ändra texten så den stämmer med variabeln
-        player2_score_text.value = str(player2_score)
-
-        # säg till Flet att en uppdatering har
-        # skett så att den visas
-        player2_score_text.update()
-        pass
-
-    page.add(flet.Container(
-        bgcolor="#ffdddd",
-        gradient=flet.LinearGradient(
-            begin=flet.alignment.top_left,
-            end=flet.alignment.bottom_right,
-            colors=["#ff0000", "#ffff00", "#00ffff"]
-        ),
-        content=flet.Row(
-            alignment=flet.MainAxisAlignment.CENTER,
-            controls=[
-                flet.Text("Bertil", size=20),
-                flet.IconButton(icon=flet.icons.REMOVE, on_click=player1_decrease_score),
-                flet.IconButton(icon=flet.icons.ADD, on_click=player1_increase_score),
-                player1_score_text,
-                flet.Text("-", size=30),
-                player2_score_text,
-                flet.IconButton(icon=flet.icons.REMOVE, on_click=player2_decrease_score),
-                flet.IconButton(icon=flet.icons.ADD, on_click=player2_increase_score),
-                flet.Text("Wlem", size=20)
-            ]
-        )
-
+    page.add(flet.Column(
+        scroll=flet.ScrollMode.AUTO,
+        expand=True,
+        controls=[
+            BadmintonSet(player1, player2, 21),
+            BadmintonSet(player1, player2, 21),
+            BadmintonSet(player1, player2, 11),
+        ]
     ))
 
 
