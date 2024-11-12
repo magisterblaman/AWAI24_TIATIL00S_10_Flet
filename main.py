@@ -89,18 +89,40 @@ class BadmintonSet(flet.Container):
 
 
 def main(page: flet.Page):
-    player1 = "Bertil"
-    player2 = "Augustus"
 
-    page.add(flet.Column(
+    def start_game(e):
+        nonlocal player1_input_field
+        nonlocal player2_input_field
+        nonlocal set_column
+
+        set_column.controls.append(
+            BadmintonSet(player1_input_field.value, player2_input_field.value, 21)
+        )
+        set_column.controls.append(
+            BadmintonSet(player1_input_field.value, player2_input_field.value, 21)
+        )
+        set_column.controls.append(
+            BadmintonSet(player1_input_field.value, player2_input_field.value, 11)
+        )
+        set_column.update()
+
+
+    player1_input_field = flet.TextField(label="Spelare 1")
+    player2_input_field = flet.TextField(label="Spelare 2")
+
+    page.add(player1_input_field)
+    page.add(player2_input_field)
+    page.add(flet.TextButton("Starta match", on_click=start_game))
+
+    set_column = flet.Column(
         scroll=flet.ScrollMode.AUTO,
         expand=True,
         controls=[
-            BadmintonSet(player1, player2, 21),
-            BadmintonSet(player1, player2, 21),
-            BadmintonSet(player1, player2, 11),
+
         ]
-    ))
+    )
+
+    page.add(set_column)
 
 
 
