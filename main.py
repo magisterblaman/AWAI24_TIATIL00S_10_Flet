@@ -14,6 +14,42 @@ class BadmintonSet(flet.Container):
         # skett så att den visas
         self.player1_score_text.update()
         pass
+    def player1_decrease_score(self, e):
+        # ändra variabelvärdet
+        if self.player1_score > 0:
+            self.player1_score -= 1
+
+        # ändra texten så den stämmer med variabeln
+        self.player1_score_text.value = str(self.player1_score)
+
+        # säg till Flet att en uppdatering har
+        # skett så att den visas
+        self.player1_score_text.update()
+        pass
+    def player2_increase_score(self, e):
+        # ändra variabelvärdet
+        if self.player2_score < 21:
+            self.player2_score += 1
+
+        # ändra texten så den stämmer med variabeln
+        self.player2_score_text.value = str(self.player2_score)
+
+        # säg till Flet att en uppdatering har
+        # skett så att den visas
+        self.player2_score_text.update()
+        pass
+    def player2_decrease_score(self, e):
+        # ändra variabelvärdet
+        if self.player2_score > 0:
+            self.player2_score -= 1
+
+        # ändra texten så den stämmer med variabeln
+        self.player2_score_text.value = str(self.player2_score)
+
+        # säg till Flet att en uppdatering har
+        # skett så att den visas
+        self.player2_score_text.update()
+        pass
 
     def __init__(self):
         super().__init__()
