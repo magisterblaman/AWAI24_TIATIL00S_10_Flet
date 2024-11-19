@@ -1,6 +1,7 @@
 import flet
 import flet.canvas as cv
 
+
 def main(page: flet.Page):
     page.add(cv.Canvas(
         width=150,
@@ -36,8 +37,14 @@ def main(page: flet.Page):
                     paint=flet.Paint("white", stroke_width=1,
                                      stroke_dash_pattern=[3, 5])
                     ),
+            cv.Circle(112.5, 30, 10,
+                      paint=flet.Paint("red")),
+            cv.Circle(37.5, 70, 10,
+                      paint=flet.Paint("red", stroke_width=3,
+                                       style=flet.PaintingStyle.STROKE))
         ]
     ))
     pass
+
 
 flet.app(main)
