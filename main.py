@@ -1,5 +1,25 @@
 import flet
 
+class BadmintonGame(flet.Container):
+    def __init__(self):
+        super().__init__()
+
+        self.player1_score_text = flet.Text(str(0), size=50)
+        self.player2_score_text = flet.Text(str(0), size=50)
+
+
+        self.content = flet.Column(
+            controls=[
+                flet.Row(
+                    controls=[
+                        self.player1_score_text,
+                        flet.Text("-", size=50),
+                        self.player2_score_text
+                    ]
+                )
+            ]
+        )
+
 class BadmintonSet(flet.Container):
 
     def player1_increase_score(self, e):
@@ -110,9 +130,9 @@ def main(page: flet.Page):
     player1_input_field = flet.TextField(label="Spelare 1")
     player2_input_field = flet.TextField(label="Spelare 2")
 
-    page.add(player1_input_field)
-    page.add(player2_input_field)
-    page.add(flet.TextButton("Starta match", on_click=start_game))
+    #page.add(player1_input_field)
+    #page.add(player2_input_field)
+    #page.add(flet.TextButton("Starta match", on_click=start_game))
 
     set_column = flet.Column(
         scroll=flet.ScrollMode.AUTO,
@@ -122,7 +142,8 @@ def main(page: flet.Page):
         ]
     )
 
-    page.add(set_column)
+    #page.add(set_column)
+    page.add(BadmintonGame())
 
 
 
