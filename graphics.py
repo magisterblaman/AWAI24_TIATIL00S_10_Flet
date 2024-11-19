@@ -28,8 +28,14 @@ def main(page: flet.Page):
                     paint=flet.Paint("white", stroke_width=2)),
             cv.Line(90, 5, 90, 95,
                     paint=flet.Paint("white", stroke_width=2)),
+            cv.Line(5, 50, 60, 50,
+                    paint=flet.Paint("white", stroke_width=2)),
+            cv.Line(90, 50, 145, 50,
+                    paint=flet.Paint("white", stroke_width=2)),
             cv.Line(75, 5, 75, 95,
-                    paint=flet.Paint("white", stroke_width=1, stroke_dash_pattern=[3, 5])),
+                    paint=flet.Paint("white", stroke_width=1,
+                                     stroke_dash_pattern=[3, 5])
+                    ),
         ]
     ))
     pass
