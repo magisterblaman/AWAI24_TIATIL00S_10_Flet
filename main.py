@@ -1,21 +1,55 @@
 import flet
 
 class BadmintonGame(flet.Container):
-    def __init__(self):
+
+    def update_game_score(self):
+        player1_score = 0
+        player2_score = 0
+        if self.sets[0].winner == 1:
+            player1_score += 1
+        elif self.sets[0].winner == 2:
+            player2_score += 1
+
+        if self.sets[1].winner == 1:
+            player1_score += 1
+        elif self.sets[1].winner == 2:
+            player2_score += 1
+
+        if self.sets[2].winner == 1:
+            player1_score += 1
+        elif self.sets[2].winner == 2:
+            player2_score += 1
+
+        self.player1_score_text.value = str(player1_score)
+        self.player2_score_text.value = str(player2_score)
+
+        self.player1_score_text.update()
+        self.player2_score_text.update()
+
+    def __init__(self, player1_name, player2_name):
         super().__init__()
 
         self.player1_score_text = flet.Text(str(0), size=50)
         self.player2_score_text = flet.Text(str(0), size=50)
 
+        self.sets = [
+            BadmintonSet(player1_name, player2_name, 21, self),
+            BadmintonSet(player1_name, player2_name, 21, self),
+            BadmintonSet(player1_name, player2_name, 11, self)
+        ]
 
         self.content = flet.Column(
             controls=[
                 flet.Row(
+                    alignment=flet.MainAxisAlignment.CENTER,
                     controls=[
                         self.player1_score_text,
                         flet.Text("-", size=50),
                         self.player2_score_text
                     ]
+                ),
+                flet.Column(
+                    controls=self.sets
                 )
             ]
         )
@@ -26,6 +60,8 @@ class BadmintonSet(flet.Container):
         # ändra variabelvärdet
         if self.player1_score < self.max_score or (self.player1_score - self.player2_score < 2 and self.player1_score < 30):
             self.player1_score += 1
+        else:
+            self.winner = 1
 
         # ändra texten så den stämmer med variabeln
         self.player1_score_text.value = str(self.player1_score)
@@ -33,6 +69,8 @@ class BadmintonSet(flet.Container):
         # säg till Flet att en uppdatering har
         # skett så att den visas
         self.player1_score_text.update()
+
+        self.game.update_game_score()
         pass
     def player1_decrease_score(self, e):
         # ändra variabelvärdet
@@ -50,6 +88,8 @@ class BadmintonSet(flet.Container):
         # ändra variabelvärdet
         if self.player2_score < self.max_score or (self.player2_score - self.player1_score < 2 and self.player2_score < 30):
             self.player2_score += 1
+        else:
+            self.winner = 2
 
         # ändra texten så den stämmer med variabeln
         self.player2_score_text.value = str(self.player2_score)
@@ -57,6 +97,8 @@ class BadmintonSet(flet.Container):
         # säg till Flet att en uppdatering har
         # skett så att den visas
         self.player2_score_text.update()
+
+        self.game.update_game_score()
         pass
     def player2_decrease_score(self, e):
         # ändra variabelvärdet
@@ -71,7 +113,7 @@ class BadmintonSet(flet.Container):
         self.player2_score_text.update()
         pass
 
-    def __init__(self, player1_name, player2_name, max_score):
+    def __init__(self, player1_name, player2_name, max_score, game):
         super().__init__()
 
         self.bgcolor = "#ffdddd"
@@ -90,6 +132,10 @@ class BadmintonSet(flet.Container):
 
         self.player1_score_text = flet.Text(str(self.player1_score), size=30)
         self.player2_score_text = flet.Text(str(self.player2_score), size=30)
+
+        self.winner = 0
+
+        self.game = game
 
         self.content = flet.Row(
             alignment=flet.MainAxisAlignment.CENTER,
@@ -143,7 +189,7 @@ def main(page: flet.Page):
     )
 
     #page.add(set_column)
-    page.add(BadmintonGame())
+    page.add(BadmintonGame("Göran", "Anita"))
 
 
 
