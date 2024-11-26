@@ -1,4 +1,5 @@
 import flet
+import flet.canvas as cv
 
 class BadmintonGame(flet.Container):
 
@@ -60,6 +61,10 @@ class BadmintonSet(flet.Container):
         # ändra variabelvärdet
         if self.player1_score < self.max_score or (self.player1_score - self.player2_score < 2 and self.player1_score < 30):
             self.player1_score += 1
+            if self.player1_score % 2 == 0:
+                self.serve_state = "player1_even"
+            else:
+                self.serve_state = "player1_odd"
         else:
             self.winner = 1
 
@@ -88,6 +93,10 @@ class BadmintonSet(flet.Container):
         # ändra variabelvärdet
         if self.player2_score < self.max_score or (self.player2_score - self.player1_score < 2 and self.player2_score < 30):
             self.player2_score += 1
+            if self.player2_score % 2 == 0:
+                self.serve_state = "player2_even"
+            else:
+                self.serve_state = "player2_odd"
         else:
             self.winner = 2
 
@@ -113,6 +122,28 @@ class BadmintonSet(flet.Container):
         self.player2_score_text.update()
         pass
 
+    def update_serve_graphics(self):
+        if self.serve_state == "player1_even":
+            self.serve_origin.x = 37.5
+            self.serve_origin.y = 70
+            self.serve_target.x = 112.5
+            self.serve_target.y = 30
+        elif self.serve_state == "player1_odd":
+            self.serve_origin.x = 37.5
+            self.serve_origin.y = 30
+            self.serve_target.x = 112.5
+            self.serve_target.y = 70
+        elif self.serve_state == "player2_even":
+            self.serve_target.x = 37.5
+            self.serve_target.y = 70
+            self.serve_origin.x = 112.5
+            self.serve_origin.y = 30
+        elif self.serve_state == "player2_odd":
+            self.serve_target.x = 37.5
+            self.serve_target.y = 30
+            self.serve_origin.x = 112.5
+            self.serve_origin.y = 70
+
     def __init__(self, player1_name, player2_name, max_score, game):
         super().__init__()
 
@@ -133,24 +164,90 @@ class BadmintonSet(flet.Container):
         self.player1_score_text = flet.Text(str(self.player1_score), size=30)
         self.player2_score_text = flet.Text(str(self.player2_score), size=30)
 
+        self.serve_state = ""
+
+        self.serve_origin = cv.Circle(112.5, 30, 10,
+                                 paint=flet.Paint("red"))
+
+        self.serve_target = cv.Circle(37.5, 70, 10,
+                                 paint=flet.Paint("red", stroke_width=3,
+                                                  style=flet.PaintingStyle.STROKE))
+
         self.winner = 0
 
         self.game = game
 
-        self.content = flet.Row(
-            alignment=flet.MainAxisAlignment.CENTER,
+        self.content = flet.Column(
             controls=[
-                flet.Text(self.player1_name, size=20),
-                flet.IconButton(icon=flet.icons.REMOVE, on_click=self.player1_decrease_score),
-                flet.IconButton(icon=flet.icons.ADD, on_click=self.player1_increase_score),
-                self.player1_score_text,
-                flet.Text("-", size=30),
-                self.player2_score_text,
-                flet.IconButton(icon=flet.icons.REMOVE, on_click=self.player2_decrease_score),
-                flet.IconButton(icon=flet.icons.ADD, on_click=self.player2_increase_score),
-                flet.Text(self.player2_name, size=20)
+                cv.Canvas(
+                    width=150,
+                    height=100,
+                    shapes=[
+                        cv.Rect(0, 0, 150, 100,
+                                paint=flet.Paint("blue")),
+                        cv.Line(5, 5, 145, 5,
+                                paint=flet.Paint("white", stroke_width=2)),
+                        cv.Line(5, 90, 145, 90,
+                                paint=flet.Paint("white", stroke_width=2)),
+                        cv.Line(5, 10, 145, 10,
+                                paint=flet.Paint("white", stroke_width=2)),
+                        cv.Line(5, 95, 145, 95,
+                                paint=flet.Paint("white", stroke_width=2)),
+                        cv.Line(5, 5, 5, 95,
+                                paint=flet.Paint("white", stroke_width=2)),
+                        cv.Line(145, 5, 145, 95,
+                                paint=flet.Paint("white", stroke_width=2)),
+                        cv.Line(15, 5, 15, 95,
+                                paint=flet.Paint("white", stroke_width=2)),
+                        cv.Line(135, 5, 135, 95,
+                                paint=flet.Paint("white", stroke_width=2)),
+                        cv.Line(60, 5, 60, 95,
+                                paint=flet.Paint("white", stroke_width=2)),
+                        cv.Line(90, 5, 90, 95,
+                                paint=flet.Paint("white", stroke_width=2)),
+                        cv.Line(5, 50, 60, 50,
+                                paint=flet.Paint("white", stroke_width=2)),
+                        cv.Line(90, 50, 145, 50,
+                                paint=flet.Paint("white", stroke_width=2)),
+                        cv.Line(75, 5, 75, 95,
+                                paint=flet.Paint("white", stroke_width=1,
+                                                 stroke_dash_pattern=[3, 5])
+                                ),
+                        self.serve_origin,
+                        self.serve_target
+                    ]
+                ),
+                flet.Row(
+                    alignment=flet.MainAxisAlignment.CENTER,
+                    controls=[
+                        flet.Text(self.player1_name, size=20),
+                        flet.IconButton(icon=flet.icons.REMOVE, on_click=self.player1_decrease_score),
+                        flet.IconButton(icon=flet.icons.ADD, on_click=self.player1_increase_score),
+                        self.player1_score_text,
+                        flet.Text("-", size=30),
+                        self.player2_score_text,
+                        flet.IconButton(icon=flet.icons.REMOVE, on_click=self.player2_decrease_score),
+                        flet.IconButton(icon=flet.icons.ADD, on_click=self.player2_increase_score),
+                        flet.Text(self.player2_name, size=20)
+                    ]
+                )
             ]
         )
+
+        # self.content = flet.Row(
+        #     alignment=flet.MainAxisAlignment.CENTER,
+        #     controls=[
+        #         flet.Text(self.player1_name, size=20),
+        #         flet.IconButton(icon=flet.icons.REMOVE, on_click=self.player1_decrease_score),
+        #         flet.IconButton(icon=flet.icons.ADD, on_click=self.player1_increase_score),
+        #         self.player1_score_text,
+        #         flet.Text("-", size=30),
+        #         self.player2_score_text,
+        #         flet.IconButton(icon=flet.icons.REMOVE, on_click=self.player2_decrease_score),
+        #         flet.IconButton(icon=flet.icons.ADD, on_click=self.player2_increase_score),
+        #         flet.Text(self.player2_name, size=20)
+        #     ]
+        # )
 
 
 
