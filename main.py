@@ -65,6 +65,8 @@ class BadmintonSet(flet.Container):
                 self.serve_state = "player1_even"
             else:
                 self.serve_state = "player1_odd"
+
+            self.update_serve_graphics()
         else:
             self.winner = 1
 
@@ -97,6 +99,8 @@ class BadmintonSet(flet.Container):
                 self.serve_state = "player2_even"
             else:
                 self.serve_state = "player2_odd"
+
+            self.update_serve_graphics()
         else:
             self.winner = 2
 
@@ -143,6 +147,9 @@ class BadmintonSet(flet.Container):
             self.serve_target.y = 30
             self.serve_origin.x = 112.5
             self.serve_origin.y = 70
+
+        self.serve_origin.update()
+        self.serve_target.update()
 
     def __init__(self, player1_name, player2_name, max_score, game):
         super().__init__()
