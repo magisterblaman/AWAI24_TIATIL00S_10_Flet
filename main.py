@@ -58,17 +58,21 @@ class BadmintonGame(flet.Container):
 class BadmintonSet(flet.Container):
 
     def player1_increase_score(self, e):
-        # ändra variabelvärdet
-        if self.player1_score < self.max_score or (self.player1_score - self.player2_score < 2 and self.player1_score < 30):
-            self.player1_score += 1
+        if self.winner != 0:
+            return
+
+        self.player1_score += 1
+
+        if ((self.player1_score >= 21 and self.player1_score - self.player2_score >= 2)
+                or self.player1_score >= 30):
+            self.winner = 1
+        else:
             if self.player1_score % 2 == 0:
                 self.serve_state = "player1_even"
             else:
                 self.serve_state = "player1_odd"
 
             self.update_serve_graphics()
-        else:
-            self.winner = 1
 
         # ändra texten så den stämmer med variabeln
         self.player1_score_text.value = str(self.player1_score)
@@ -80,6 +84,7 @@ class BadmintonSet(flet.Container):
         self.game.update_game_score()
         pass
     def player1_decrease_score(self, e):
+        self.winner = 0
         # ändra variabelvärdet
         if self.player1_score > 0:
             self.player1_score -= 1
@@ -90,6 +95,8 @@ class BadmintonSet(flet.Container):
         # säg till Flet att en uppdatering har
         # skett så att den visas
         self.player1_score_text.update()
+
+        self.game.update_game_score()
         pass
     def player2_increase_score(self, e):
         # ändra variabelvärdet
@@ -263,37 +270,23 @@ def main(page: flet.Page):
     def start_game(e):
         nonlocal player1_input_field
         nonlocal player2_input_field
-        nonlocal set_column
 
-        set_column.controls.append(
-            BadmintonSet(player1_input_field.value, player2_input_field.value, 21)
-        )
-        set_column.controls.append(
-            BadmintonSet(player1_input_field.value, player2_input_field.value, 21)
-        )
-        set_column.controls.append(
-            BadmintonSet(player1_input_field.value, player2_input_field.value, 11)
-        )
-        set_column.update()
+        game_column.controls.insert(0, BadmintonGame(player1_input_field.value, player2_input_field.value))
+        game_column.update()
 
+
+    game_column = flet.Column(
+
+    )
 
     player1_input_field = flet.TextField(label="Spelare 1")
     player2_input_field = flet.TextField(label="Spelare 2")
 
-    #page.add(player1_input_field)
-    #page.add(player2_input_field)
-    #page.add(flet.TextButton("Starta match", on_click=start_game))
+    page.add(player1_input_field)
+    page.add(player2_input_field)
+    page.add(flet.TextButton("Starta match", on_click=start_game))
 
-    set_column = flet.Column(
-        scroll=flet.ScrollMode.AUTO,
-        expand=True,
-        controls=[
-
-        ]
-    )
-
-    #page.add(set_column)
-    page.add(BadmintonGame("Göran", "Anita"))
+    page.add(game_column)
 
 
 
