@@ -286,8 +286,8 @@ def main(page: flet.Page):
         game_column.update()
 
 
-    game_column = flet.Column(
-
+    game_column = flet.ListView(
+        expand=1
     )
 
     player1_input_field = flet.TextField(label="Spelare 1")
