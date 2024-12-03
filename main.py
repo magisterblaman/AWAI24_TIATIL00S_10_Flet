@@ -63,7 +63,7 @@ class BadmintonSet(flet.Container):
 
         self.player1_score += 1
 
-        if ((self.player1_score >= 21 and self.player1_score - self.player2_score >= 2)
+        if ((self.player1_score >= self.max_score and self.player1_score - self.player2_score >= 2)
                 or self.player1_score >= 30):
             self.winner = 1
         else:
@@ -84,7 +84,9 @@ class BadmintonSet(flet.Container):
         self.game.update_game_score()
         pass
     def player1_decrease_score(self, e):
-        self.winner = 0
+        if self.winner == 1:
+            self.winner = 0
+
         # ändra variabelvärdet
         if self.player1_score > 0:
             self.player1_score -= 1
@@ -99,17 +101,21 @@ class BadmintonSet(flet.Container):
         self.game.update_game_score()
         pass
     def player2_increase_score(self, e):
-        # ändra variabelvärdet
-        if self.player2_score < self.max_score or (self.player2_score - self.player1_score < 2 and self.player2_score < 30):
-            self.player2_score += 1
+        if self.winner != 0:
+            return
+
+        self.player2_score += 1
+
+        if ((self.player2_score >= self.max_score and self.player2_score - self.player1_score >= 2)
+                or self.player2_score >= 30):
+            self.winner = 2
+        else:
             if self.player2_score % 2 == 0:
                 self.serve_state = "player2_even"
             else:
                 self.serve_state = "player2_odd"
 
             self.update_serve_graphics()
-        else:
-            self.winner = 2
 
         # ändra texten så den stämmer med variabeln
         self.player2_score_text.value = str(self.player2_score)
@@ -121,6 +127,9 @@ class BadmintonSet(flet.Container):
         self.game.update_game_score()
         pass
     def player2_decrease_score(self, e):
+        if self.winner == 2:
+            self.winner = 0
+
         # ändra variabelvärdet
         if self.player2_score > 0:
             self.player2_score -= 1
@@ -131,6 +140,8 @@ class BadmintonSet(flet.Container):
         # säg till Flet att en uppdatering har
         # skett så att den visas
         self.player2_score_text.update()
+
+        self.game.update_game_score()
         pass
 
     def update_serve_graphics(self):
