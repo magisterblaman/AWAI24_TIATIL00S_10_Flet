@@ -189,6 +189,24 @@ class BadmintonSet(flet.Container):
         self.player1_score_text = flet.Text(str(self.player1_score), size=30)
         self.player2_score_text = flet.Text(str(self.player2_score), size=30)
 
+        self.player1_name_text = flet.Text(self.player1_name, size=20)
+        self.player2_name_text = flet.Text(self.player2_name, size=20)
+
+        if player1_name == "Mona-Lisa":
+            self.player1_name_text = flet.Image(
+                src="monalista.jpeg",
+                width=100,
+                height=100
+            )
+
+        if player2_name == "Mona-Lisa":
+            self.player2_name_text = flet.Image(
+                src="monalista.jpeg",
+                width=100,
+                height=100
+            )
+
+
         self.serve_state = ""
 
         self.serve_origin = cv.Circle(112.5, 30, 10,
@@ -245,7 +263,7 @@ class BadmintonSet(flet.Container):
                 flet.Row(
                     alignment=flet.MainAxisAlignment.CENTER,
                     controls=[
-                        flet.Text(self.player1_name, size=20),
+                        self.player1_name_text,
                         flet.IconButton(icon=flet.icons.REMOVE, on_click=self.player1_decrease_score),
                         flet.IconButton(icon=flet.icons.ADD, on_click=self.player1_increase_score),
                         self.player1_score_text,
@@ -253,7 +271,7 @@ class BadmintonSet(flet.Container):
                         self.player2_score_text,
                         flet.IconButton(icon=flet.icons.REMOVE, on_click=self.player2_decrease_score),
                         flet.IconButton(icon=flet.icons.ADD, on_click=self.player2_increase_score),
-                        flet.Text(self.player2_name, size=20)
+                        self.player2_name_text
                     ]
                 )
             ]
@@ -285,6 +303,11 @@ def main(page: flet.Page):
         game_column.controls.insert(0, BadmintonGame(player1_input_field.value, player2_input_field.value))
         game_column.update()
 
+    def player1_submit(e):
+        nonlocal player2_input_field
+
+        player2_input_field.focus()
+
 
     game_column = flet.ListView(
         expand=1
@@ -292,6 +315,9 @@ def main(page: flet.Page):
 
     player1_input_field = flet.TextField(label="Spelare 1")
     player2_input_field = flet.TextField(label="Spelare 2")
+
+    player1_input_field.on_submit = player1_submit
+    player2_input_field.on_submit = start_game
 
     page.add(player1_input_field)
     page.add(player2_input_field)
